@@ -4,6 +4,7 @@
  * Copyright (c) 2014 XadillaX' Gensokyo, all rights
  * reserved
  */
+var TAG_TYPE_OFFSET = 1;
 var _tagIds;
 
 /**
@@ -12,14 +13,16 @@ var _tagIds;
  */
 function _generateTagIds() {
     if(!_tagIds) {
+        var types = require("./tags");
+
         _tagIds = {
             "0"  : null,
-            "1"  : null,
-            "2"  : null,
-            "3"  : null,
-            "4"  : null,
-            "5"  : null,
-            "6"  : null,
+            "1"  : types.TAGByte,
+            "2"  : types.TAGShort,
+            "3"  : types.TAGInt,
+            "4"  : types.TAGLong,
+            "5"  : types.TAGFloat,
+            "6"  : types.TAGDouble,
             "7"  : null,
             "8"  : null,
             "9"  : null,
@@ -42,16 +45,42 @@ var BaseTag = function() {
 };
 
 /**
+ * read body information from buffer (private & to be inherited)
+ * @param {Buffer} buff the binary buffer data
+ * @param {Number} offset offset in buffer
+ * @return {Number} the whole body byte length
+ */
+BaseTag.prototype._readBodyFromBuffer = function(buff, offset) {
+    // To be inherited.
+    var _ = buff;
+    _ = offset;
+    return 0;
+};
+
+/**
+ * read name information from buffer (private)
+ * @param {Buffer} buff the binary buffer data
+ * @param {Number} offset offset in buffer
+ * @return {Number} the whole name column byte length
+ */
+BaseTag.prototype._readNameFromBuffer = function(buff, offset) {
+    var nameLength = buff.readUInt16(offset);
+    var name = buff.toString("utf8", offset + 2, nameLength);
+    this.id = name;
+
+    return nameLength + 2;
+};
+
+/**
  * read tag(s) from buffer
  * @param {Buffer} buff the binary buffer data
  * @param {Number} offset offset in buffer
  * @return {Number} parsed length in buffer
  */
 BaseTag.prototype.readFromBuffer = function(buff, offset) {
-    // to be inherited.
-    var 我的世界 = buff;
-    我的世界     = offset;
-    return 我的世界;
+    var nameLength = this._readNameFromBuffer(buff, offset + TAG_TYPE_OFFSET);
+    var bodyLength = this._readBodyFromBuffer(buff, offset + TAG_TYPE_OFFSET + nameLength);
+    return TAG_TYPE_OFFSET + nameLength + bodyLength;
 };
 
 /**

@@ -7,7 +7,7 @@
 var NBT = function() {
 };
 
-NBT.prototype.loadFromBuffer = function(callback) {
+NBT.prototype.loadFromBuffer = function(buff, callback) {
 };
 
 module.exports = NBT;
