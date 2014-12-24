@@ -13,22 +13,7 @@ var _tagIds;
  */
 function _generateTagIds() {
     if(!_tagIds) {
-        var types = require("./tags");
-
-        _tagIds = {
-            "0"  : null,
-            "1"  : types.TAGByte,
-            "2"  : types.TAGShort,
-            "3"  : types.TAGInt,
-            "4"  : types.TAGLong,
-            "5"  : types.TAGFloat,
-            "6"  : types.TAGDouble,
-            "7"  : null,
-            "8"  : null,
-            "9"  : null,
-            "10" : null,
-            "11" : null
-        };
+        _tagIds = require("./tags");
     }
 
     return _tagIds;
@@ -64,8 +49,8 @@ BaseTag.prototype._readBodyFromBuffer = function(buff, offset) {
  * @return {Number} the whole name column byte length
  */
 BaseTag.prototype._readNameFromBuffer = function(buff, offset) {
-    var nameLength = buff.readUInt16(offset);
-    var name = buff.toString("utf8", offset + 2, nameLength);
+    var nameLength = buff.readUInt16BE(offset);
+    var name = buff.toString("utf8", offset + 2, offset + 2 + nameLength);
     this.id = name;
 
     return nameLength + 2;
@@ -96,17 +81,20 @@ BaseTag.getNextTag = function(buff, offset) {
 
     // The first byte in a tag is the tag type (ID)
     var tagType = buff.readUInt8(offset);
-    if(tagType < 0 || tagType >= TAG_IDS) {
+    if(tagType < 0) {
         throw new Error("Unknown tag type - " + tagType + ".");
     }
 
     var Tag = TAG_IDS[tagType];
-    if(null === Tag) {
+    if(null === Tag || undefined === Tag) {
         throw new Error("Tag type " + tagType + " is not supported by this module yet.");
     }
 
     var tag = new Tag();
-    return tag.readFromBuffer(buff, offset);
+    return {
+        length : tag.readFromBuffer(buff, offset),
+        tag    : tag
+    };
 };
 
 module.exports = BaseTag;
