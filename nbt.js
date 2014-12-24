@@ -5,6 +5,7 @@
  * reserved
  */
 var Tag = require("./tags/base");
+var Bignum = require("bignum");
 
 function _toJSON(obj) {
     var val = obj.value;
@@ -14,6 +15,10 @@ function _toJSON(obj) {
     }
 
     if(typeof val === "string") {
+        return val;
+    }
+
+    if(val instanceof Bignum) {
         return val;
     }
 
