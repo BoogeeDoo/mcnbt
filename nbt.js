@@ -42,6 +42,21 @@ NBT.prototype.loadFromBuffer = function(buff, callback) {
 };
 
 /**
+ * write to compressed buffer
+ * @param {Function} callback callback function
+ * @param {String} [method] compress method (gzip|deflate)
+ */
+NBT.prototype.writeToCompressedBuffer = function(callback, method) {
+    method = method || "gzip";
+    try {
+        var _buff = this.writeToBuffer();
+        zlib[method](_buff, callback);
+    } catch(e) {
+        return callback(e);
+    }
+};
+
+/**
  * write to buffer
  * @return {Buffer} the result buffer data
  */
@@ -151,6 +166,32 @@ NBT.prototype.loadFromZlibCompressedFile = function(filename, callback) {
             self.loadFromBuffer(buff, callback);
         });
     });
+};
+
+/**
+ * write to file
+ * @param {String} filename file's name
+ * @param {Function} callback callback function
+ */
+NBT.prototype.writeToFile = function(filename, callback) {
+    try {
+        fs.writeFile(filename, this.writeToBuffer(), callback);
+    } catch(e) {
+        return callback(e);
+    }
+};
+
+/**
+ * write to compressed file
+ * @param {String} filename file's name
+ * @param {Function} callback callback function
+ * @param {String} [method] compress method (gzip|deflate)
+ */
+NBT.prototype.writeToCompressedFile = function(filename, callback, method) {
+    this.writeToCompressedBuffer(function(err, buff) {
+        if(err) return callback(err);
+        fs.writeFile(filename, buff, callback);
+    }, method);
 };
 
 /**
