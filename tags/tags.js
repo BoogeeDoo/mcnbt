@@ -128,8 +128,7 @@ TAGList.prototype._readBodyFromBuffer = function(buff, offset) {
 
     var Tag = module.exports[typeId];
     if((null === Tag || undefined === Tag) && 0 !== typeId) {
-        throw new Error("Tag type " + typeId + " is not supported yet in " +
-                        "list.");
+        throw new Error("Tag type " + typeId + " is not supported yet in list.");
     } else if(0 === typeId) {
         this.value = [];
         return 1 + 4;
@@ -167,8 +166,7 @@ TAGCompound.prototype._getNextTag = function(buff, offset) {
 
     var Tag = module.exports[tagType];
     if(null === Tag || undefined === Tag) {
-        throw new Error("Tag type " + tagType + " is not supported by this " +
-                        "module yet.");
+        throw new Error("Tag type " + tagType + " is not supported by this module yet.");
     }
 
     var tag = new Tag();
@@ -211,28 +209,40 @@ TAGIntArray.prototype._readBodyFromBuffer = function(buff, offset) {
 };
 
 module.exports = {
-    TAGByte      : TAGByte,
-    TAGShort     : TAGShort,
-    TAGInt       : TAGInt,
-    TAGLong      : TAGLong,
-    TAGFloat     : TAGFloat,
-    TAGDouble    : TAGDouble,
-    TAGByteArray : TAGByteArray,
-    TAGString    : TAGString,
-    TAGList      : TAGList,
-    TAGCompound  : TAGCompound,
-    TAGIntArray  : TAGIntArray,
+    TAGByte        : TAGByte,
+    TAGShort       : TAGShort,
+    TAGInt         : TAGInt,
+    TAGLong        : TAGLong,
+    TAGFloat       : TAGFloat,
+    TAGDouble      : TAGDouble,
+    TAGByteArray   : TAGByteArray,
+    TAGString      : TAGString,
+    TAGList        : TAGList,
+    TAGCompound    : TAGCompound,
+    TAGIntArray    : TAGIntArray,
 
-    "1"          : TAGByte,
-    "2"          : TAGShort,
-    "3"          : TAGInt,
-    "4"          : TAGLong,
-    "5"          : TAGFloat,
-    "6"          : TAGDouble,
-    "7"          : TAGByteArray,
-    "8"          : TAGString,
-    "9"          : TAGList,
-    "10"         : TAGCompound,
-    "11"         : TAGIntArray
+    "1"            : TAGByte,
+    "2"            : TAGShort,
+    "3"            : TAGInt,
+    "4"            : TAGLong,
+    "5"            : TAGFloat,
+    "6"            : TAGDouble,
+    "7"            : TAGByteArray,
+    "8"            : TAGString,
+    "9"            : TAGList,
+    "10"           : TAGCompound,
+    "11"           : TAGIntArray,
+
+    TAG_Byte       : 1,
+    TAG_Short      : 2,
+    TAG_Int        : 3,
+    TAG_LONG       : 4,
+    TAG_Float      : 5,
+    TAG_Double     : 6,
+    TAG_Byte_Array : 7,
+    TAG_String     : 8,
+    TAG_List       : 9,
+    TAG_Compound   : 10,
+    TAG_Int_Array  : 11
 };
 

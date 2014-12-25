@@ -1,10 +1,10 @@
 {
   "name": "mcnbt",
-  "version": "0.0.0-alpha",
+  "version": "0.0.1-alpha",
   "description": "Yet another Minecraft NBT format file / buffer parser for Node.js.",
   "main": "nbt.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd test && node test.js && cd .."
   },
   "repository": {
     "type": "git",

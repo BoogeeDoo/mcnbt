@@ -5,44 +5,14 @@
  * reserved
  */
 var Tag = require("./tags/base");
-var Bignum = require("bignum");
+var fs = require("fs");
+var zlib = require("zlib");
 
-function _toJSON(obj) {
-    var val = obj.value;
-
-    if(typeof val === "number") {
-        return val;
-    }
-
-    if(typeof val === "string") {
-        return val;
-    }
-
-    if(val instanceof Bignum) {
-        return val;
-    }
-
-    if(obj.type === "TAG_Int_Array" || obj.type === "TAG_Byte_Array") {
-        return val;
-    }
-
-    if(obj.type === "TAG_List") {
-        var _val = [];
-        for(var i = 0; i < val.length; i++) {
-            _val.push(_toJSON(val[i]));
-        }
-        return _val;
-    }
-
-    var _val = {};
-    for(var key in val) {
-        if(!val.hasOwnProperty(key)) continue;
-        _val[key] = _toJSON(val[key]);
-    }
-
-    return _val;
-}
-
+/**
+ * NBT Class
+ * @constructor
+ * @refer http://minecraft.gamepedia.com/NBT_Format
+ */
 var NBT = function() {
     this.root = {};
 };
@@ -71,6 +41,87 @@ NBT.prototype.loadFromBuffer = function(buff, callback) {
 };
 
 /**
+ * select a tag
+ * @param {String} tagName the tag name in root
+ * @return {Tag} the tag which matches `tagName`
+ */
+NBT.prototype.select = function(tagName) {
+    if(!this.root || !Object.keys(this.root).length) return null;
+    if(undefined === this.root[tagName]) return null;
+
+    return this.root[tagName];
+};
+
+NBT.prototype.get = NBT.prototype.select;
+
+/**
+ * get root object's length
+ * @return {Number} root length
+ */
+NBT.prototype.count = function() {
+    if(!this.root) return null;
+    return Object.keys(this.root).length;
+};
+
+/**
+ * get root's keys
+ * @return {Number} root's keys
+ */
+NBT.prototype.keys = function() {
+    if(!this.root) return [];
+    return Object.keys(this.root);
+};
+
+/**
+ * inspect
+ * @return {String}
+ */
+NBT.prototype.inspect = function() {
+    return "<NBT " + JSON.stringify(this.keys()) + ">";
+};
+
+/**
+ * toString
+ * @return {String}
+ */
+NBT.prototype.toString = function() {
+    return JSON.stringify(this.toJSON(), true, 2);
+};
+
+/**
+ * load NBT structure from file
+ * @param {String} filename NBT filename
+ * @param {Function} callback callback function
+ */
+NBT.prototype.loadFromFile = function(filename, callback) {
+    var self = this;
+    fs.readFile(filename, function(err, buff) {
+        if(err) {
+            return callback(err);
+        }
+
+        self.loadFromBuffer(buff, callback);
+    });
+};
+
+NBT.prototype.loadFromZlibCompressedFile = function(filename, callback) {
+    var self = this;
+    fs.readFile(filename, function(err, buff) {
+        if(err) {
+            return callback(err);
+        }
+
+        zlib.unzip(buff, function(err, buff) {
+            if(err) {
+                return callback(err);
+            }
+
+            self.loadFromBuffer(buff, callback);
+        });
+    });
+};
+
+/**
  * toJSON
  * @return {Object} a JSON object
  */
@@ -78,7 +129,7 @@ NBT.prototype.toJSON = function() {
     var res = {};
     for(var key in this.root) {
         if(!this.root.hasOwnProperty(key)) continue;
-        res[key] = _toJSON(this.root[key]);
+        res[key] = this.root[key].toJSON();
     }
 
     return res;

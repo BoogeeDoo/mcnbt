@@ -4,6 +4,8 @@
  * Copyright (c) 2014 XadillaX' Gensokyo, all rights
  * reserved
  */
+var Bignum = require("bignum");
+var util = require("util");
 var TAG_TYPE_OFFSET = 1;
 var _tagIds;
 
@@ -70,6 +72,141 @@ BaseTag.prototype.readFromBuffer = function(buff, offset) {
 };
 
 /**
+ * get tag type
+ * @return {String} tag type
+ */
+BaseTag.prototype.getType = function() {
+    return this.type;
+};
+
+/**
+ * get name
+ * @return {String} tag name
+ */
+BaseTag.prototype.getName = function() {
+    return this.id;
+};
+
+/**
+ * get name
+ * @return {String} tag name
+ */
+BaseTag.prototype.getId = BaseTag.prototype.getName;
+
+/**
+ * get value
+ * @return {Mixed} the tag value
+ */
+BaseTag.prototype.getValue = function() {
+    return this.value;
+};
+
+/**
+ * get this tag's list / object length
+ * @return {Number} length
+ */
+BaseTag.prototype.count = function() {
+    if(undefined === this.value || null === this.value) return 0;
+    if(typeof this.value !== "object") return 0;
+    if(util.isArray(this.value)) return this.value.length;
+    return Object.keys(this.value).length;
+};
+
+/**
+ * select a child tag at index
+ * @param {Number} index the child tag index
+ * @return {Tag} the tag matches `index`
+ */
+BaseTag.prototype.selectAt = function(index) {
+    if(this.value === undefined || this.value === null) return null;
+    if(!util.isArray(this.value)) return null;
+    if(index < 0 || index >= this.value.length) return null;
+    return this.value[index];
+};
+
+/**
+ * select a child tag
+ * @param {String} tagName child tag name
+ * @return {Tag} the tag matches `tagName`
+ */
+BaseTag.prototype.select = function(tagName) {
+    if(!this.value || !Object.keys(this.value).length) return null;
+    if(undefined === this.value[tagName] ||
+       !this.value.hasOwnProperty(tagName)) {
+        return null;
+    }
+
+    return this.value[tagName];
+};
+
+/**
+ * get type id
+ * @return {Number} tag type id
+ */
+BaseTag.prototype.getTypeId = function() {
+    return _generateTagIds()[this.getType()];
+};
+
+BaseTag.prototype.get = BaseTag.prototype.select;
+BaseTag.prototype.getAt = BaseTag.prototype.selectAt;
+
+/**
+ * inspect
+ * @return {String}
+ */
+BaseTag.prototype.inspect = function() {
+    return "<NBTTag " + this.getType() + ">";
+};
+
+/**
+ * toString
+ * @return {String}
+ */
+BaseTag.prototype.toString = function() {
+    return JSON.stringify(this.toJSON(), true, 2);
+};
+
+/**
+ * toJSON
+ * @return {Object} json object
+ */
+BaseTag.prototype.toJSON = function() {
+    var val = this.value;
+
+    if(typeof val === "number") {
+        return val;
+    }
+
+    if(typeof val === "string") {
+        return val;
+    }
+
+    if(val instanceof Bignum) {
+        return val;
+    }
+
+    if(this.type === "TAG_Int_Array" || this.type === "TAG_Byte_Array") {
+        return val;
+    }
+
+    if(this.type === "TAG_List") {
+        var _val = [];
+        for(var i = 0; i < val.length; i++) {
+            _val.push(val[i].toJSON());
+        }
+        return _val;
+    }
+
+    var _val = {};
+    for(var key in val) {
+        if(!val.hasOwnProperty(key)) continue;
+        _val[key] = val[key].toJSON();
+    }
+
+    return _val;
+};
+
+/**
  * get next tag
  * @param {Buffer} buff the buffer data
  * @param {Number} offset offset in buffer
@@ -88,8 +225,7 @@ BaseTag.getNextTag = function(buff, offset) {
 
     var Tag = TAG_IDS[tagType];
     if(null === Tag || undefined === Tag) {
-        throw new Error("Tag type " + tagType + " is not supported by this " +
-                        "module yet.");
+        throw new Error("Tag type " + tagType + " is not supported by this module yet.");
     }
 
     var tag = new Tag();
