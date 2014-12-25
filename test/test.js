@@ -49,5 +49,9 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
             }
         });
     });
+
+    nbt.writeToCompressedFile("/tmp/temp.txt", function(err) {
+        console.log("...", err);
+    });
 });
 
