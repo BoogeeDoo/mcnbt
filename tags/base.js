@@ -64,7 +64,8 @@ BaseTag.prototype._readNameFromBuffer = function(buff, offset) {
  */
 BaseTag.prototype.readFromBuffer = function(buff, offset) {
     var nameLength = this._readNameFromBuffer(buff, offset + TAG_TYPE_OFFSET);
-    var bodyLength = this._readBodyFromBuffer(buff, offset + TAG_TYPE_OFFSET + nameLength);
+    var bodyLength = this._readBodyFromBuffer(buff, offset + TAG_TYPE_OFFSET + 
+                                              nameLength);
     return TAG_TYPE_OFFSET + nameLength + bodyLength;
 };
 
@@ -87,7 +88,8 @@ BaseTag.getNextTag = function(buff, offset) {
 
     var Tag = TAG_IDS[tagType];
     if(null === Tag || undefined === Tag) {
-        throw new Error("Tag type " + tagType + " is not supported by this module yet.");
+        throw new Error("Tag type " + tagType + " is not supported by this " +
+                        "module yet.");
     }
 
     var tag = new Tag();

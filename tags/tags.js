@@ -128,7 +128,8 @@ TAGList.prototype._readBodyFromBuffer = function(buff, offset) {
 
     var Tag = module.exports[typeId];
     if((null === Tag || undefined === Tag) && 0 !== typeId) {
-        throw new Error("Tag type " + typeId + " is not supported yet in list.");
+        throw new Error("Tag type " + typeId + " is not supported yet in " +
+                        "list.");
     } else if(0 === typeId) {
         this.value = [];
         return 1 + 4;
@@ -166,7 +167,8 @@ TAGCompound.prototype._getNextTag = function(buff, offset) {
 
     var Tag = module.exports[tagType];
     if(null === Tag || undefined === Tag) {
-        throw new Error("Tag type " + tagType + " is not supported by this module yet.");
+        throw new Error("Tag type " + tagType + " is not supported by this " +
+                        "module yet.");
     }
 
     var tag = new Tag();
