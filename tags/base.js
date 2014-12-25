@@ -207,6 +207,25 @@ BaseTag.prototype.toJSON = function() {
 };
 
 /**
+ * toBuffer
+ * @return {Buffer} buffer data
+ */
+BaseTag.prototype.writeBuffer = function(buff, offset) {
+    // ... to be inherited
+    var _ = buff;
+    _ = offset;
+    return null;
+};
+
+/**
+ * calculate buffer length
+ * @return {Number} buffer length
+ */
+BaseTag.prototype.calcBufferLength = function() {
+    // ... to be inherited
+};
+
+/**
  * get next tag
  * @param {Buffer} buff the buffer data
  * @param {Number} offset offset in buffer

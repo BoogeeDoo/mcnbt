@@ -24,6 +24,7 @@ var NBT = function() {
  */
 NBT.prototype.loadFromBuffer = function(buff, callback) {
     try {
+        this._buff = buff;
         var offset = 0;
         while(offset < buff.length) {
             var wrapper = Tag.getNextTag(buff, offset);
@@ -38,6 +39,32 @@ NBT.prototype.loadFromBuffer = function(buff, callback) {
     }
 
     callback();
+};
+
+/**
+ * write to buffer
+ * @return {Buffer} the result buffer data
+ */
+NBT.prototype.writeToBuffer = function() {
+    var buffLength = this.calcBufferLength();
+    var buff = new Buffer(buffLength);
+
+    var len = 0;
+    for(var key in this.root) {
+        if(!this.root.hasOwnProperty(key)) continue;
+
+        var object = this.root[key];
+        buff.writeUInt8(object.getTypeId(), len);
+        
+        var nameBuff = new Buffer(object.id, "utf8");
+        nameBuff.copy(buff, len + 1 + 2);
+        buff.writeUInt16BE(nameBuff.length, len + 1);
+
+        len += object.writeBuffer(buff, len + 1 + 2 + nameBuff.length);
+        len += (1 + 2 + nameBuff.length);
+    }
+
+    return buff;
 };
 
 /**
@@ -104,6 +131,11 @@ NBT.prototype.loadFromFile = function(filename, callback) {
     });
 };
 
+/**
+ * load NBT structure from zlib compressed file
+ * @param {String} filename file's name
+ * @param {Function} callback callback function
+ */
 NBT.prototype.loadFromZlibCompressedFile = function(filename, callback) {
     var self = this;
     fs.readFile(filename, function(err, buff) {
@@ -119,6 +151,28 @@ NBT.prototype.loadFromZlibCompressedFile = function(filename, callback) {
             self.loadFromBuffer(buff, callback);
         });
     });
+};
+
+/**
+ * calculate buffer length
+ * @return {Number} precalculated buffer length
+ */
+NBT.prototype.calcBufferLength = function() {
+    var len = 0;
+    for(var key in this.root) {
+        if(!this.root.hasOwnProperty(key)) continue;
+
+        // child type id for 1 byte, child name length for 2 bytes and child
+        // name for (child name length) byte(s).
+        len += 1;
+        len += 2;
+        len += Buffer.byteLength(this.root[key].id, "utf8");
+        
+        // add the child body's length
+        len += this.root[key].calcBufferLength();
+    }
+
+    return len;
 };
 
 /**

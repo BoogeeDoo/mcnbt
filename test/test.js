@@ -19,5 +19,19 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
     console.log(gameRules.getType());
     console.log(gameRules.getTypeId());
     console.log(gameRules.toString());
+
+    console.log("==================");
+    console.log("Buffer length: " + nbt.calcBufferLength());
+
+    var rebuff = nbt.writeToBuffer();
+    var orbuff = nbt._buff;
+    console.log("ReBuffer:", rebuff);
+    console.log("OrBuffer:", orbuff);
+
+    for(var i = 0; i < rebuff.length; i++) {
+        if(rebuff[i] !== orbuff[i]) {
+            console.log("Not same at " + i + ": " + rebuff[i] + " vs. " + orbuff[i]);
+        }
+    }
 });
 
