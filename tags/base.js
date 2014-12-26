@@ -226,6 +226,16 @@ BaseTag.prototype.calcBufferLength = function() {
 };
 
 /**
+ * set value
+ * @param {Mixed} value the value to set
+ */
+BaseTag.prototype.setValue = function(value) {
+    // ... to be inherited
+    var _ = value;
+    --_;
+};
+
+/**
  * get next tag
  * @param {Buffer} buff the buffer data
  * @param {Number} offset offset in buffer

@@ -31,6 +31,14 @@ TAGByte.prototype.writeBuffer = function(buff, offset) {
     return 1;
 };
 
+TAGByte.prototype.setValue = function(value) {
+    value = parseInt(value);
+    if(value < -128 || value > 127 || isNaN(value)) {
+        throw new Error("Value of TAG_Byte should between -128 and 127.");
+    }
+    this.value = value;
+};
+
 var TAGShort = function() {
     BaseTag.call(this);
     this.type = "TAG_Short";
@@ -50,6 +58,14 @@ TAGShort.prototype.writeBuffer = function(buff, offset) {
     return 2;
 };
 
+TAGShort.prototype.setValue = function(value) {
+    value = parseInt(value);
+    if(value < -32768 || value > 32767 || isNaN(value)) {
+        throw new Error("Value of TAG_Short should between -32768 and 32767.");
+    }
+    this.value = value;
+};
+
 var TAGInt = function() {
     BaseTag.call(this);
     this.type = "TAG_Int";
@@ -67,6 +83,14 @@ TAGInt.prototype.calcBufferLength = _returnSize(4);
 TAGInt.prototype.writeBuffer = function(buff, offset) {
     buff.writeInt32BE(this.value, offset);
     return 4;
+};
+
+TAGInt.prototype.setValue = function(value) {
+    value = parseInt(value);
+    if(value < -2147483648 || value > 2147483647 || isNaN(value)) {
+        throw new Error("Value of TAG_Int should between -2147483648 and 2147483647.");
+    }
+    this.value = value;
 };
 
 var TAGLong = function() {
@@ -89,6 +113,33 @@ TAGLong.prototype.writeBuffer = function(buff, offset) {
     return 8;
 };
 
+var _longBound = {
+    min: bignum("-9223372036854775808"),
+    max: bignum("9223372036854775807")
+};
+
+TAGLong.prototype.setValue = function(value) {
+    var temp = -1;
+    if(typeof value === "string") {
+        temp = bignum(value);
+    } else if(value instanceof bignum) {
+        temp = value;
+    } else if(typeof value === "number" && !isNaN(value)) {
+        temp = bignum(value);
+    }
+
+    if(-1 === temp) {
+        throw new Error("Wrong type to set TAG_Long's value.");
+    }
+
+    if(temp.lt(_longBound.min) || temp.gt(_longBound.max)) {
+        throw new Error("Value of TAG_Long should between " +
+                        "-9223372036854775808 and 9223372036854775807");
+    }
+
+    this.value = temp;
+};
+
 var TAGFloat = function() {
     BaseTag.call(this);
     this.type = "TAG_Float";
@@ -108,6 +159,14 @@ TAGFloat.prototype.writeBuffer = function(buff, offset) {
     return 4;
 };
 
+TAGFloat.prototype.setValue = function(value) {
+    value = parseFloat(value);
+    if(value < -3.4e+38 || value > 3.4e+38 || isNaN(value)) {
+        throw new Error("Value of TAG_Float should between -3.4E+38 and 3.4E+38.");
+    }
+    this.value = value;
+};
+
 var TAGDouble = function() {
     BaseTag.call(this);
     this.type = "TAG_Double";
@@ -125,6 +184,14 @@ TAGDouble.prototype.calcBufferLength = _returnSize(8);
 TAGDouble.prototype.writeBuffer = function(buff, offset) {
     buff.writeDoubleBE(this.value, offset);
     return 8;
+};
+
+TAGDouble.prototype.setValue = function(value) {
+    value = parseFloat(value);
+    if(isNaN(value)) {
+        throw new Error("Bad value for TAG_Double.");
+    }
+    this.value = value;
 };
 
 var TAGByteArray = function() {
@@ -161,6 +228,60 @@ TAGByteArray.prototype.writeBuffer = function(buff, offset) {
     return 4 + this.value.length;
 };
 
+TAGByteArray.prototype.setValue = function(array) {
+    if(!util.isArray(array)) {
+        throw new Error("Value of TAG_Byte_Array should be an array.");
+    }
+
+    var newArray = [];
+    for(var i = 0; i < array.length; i++) {
+        newArray.push(parseInt(array[i]));
+        if(newArray[i] < -128 || newArray[i] > 127 || isNaN(newArray[i])) {
+            throw new Error("Each element in TAG_Byte_Array should between -128 and 127.");
+        }
+    }
+
+    this.value = newArray;
+};
+
+TAGByteArray.prototype.shift = function() {
+    return this.value.shift();
+};
+
+TAGByteArray.prototype.unshift = function(value) {
+    value = parseInt(value);
+    if(value < -128 || value > 127 || isNaN(value)) {
+        throw new Error("Each element in TAG_Byte_Array should between -128 and 127.");
+    }
+    return this.value.unshift(value);
+};
+
+TAGByteArray.prototype.push = function(value) {
+    value = parseInt(value);
+    if(value < -128 || value > 127 || isNaN(value)) {
+        throw new Error("Each element in TAG_Byte_Array should between -128 and 127.");
+    }
+    return this.value.push(value);
+};
+
+TAGByteArray.prototype.pop = function() {
+    return this.value.pop();
+};
+
+TAGByteArray.prototype.insert = function(value, pos) {
+    value = parseInt(value);
+    if(value < -128 || value > 127 || isNaN(value)) {
+        throw new Error("Each element in TAG_Byte_Array should between -128 and 127.");
+    }
+    if(pos < 0) pos = 0;
+    if(pos > this.value.length) pos = this.value.length;
+    this.value.push([]);
+    for(var i = this.value.length - 1; i >= pos; i--) {
+        this.value[i + 1] = this.value[i];
+    }
+    this.value[pos] = value;
+};
+
 var TAGString = function() {
     BaseTag.call(this);
     this.type = "TAG_String";
@@ -188,9 +309,18 @@ TAGString.prototype.writeBuffer = function(buff, offset) {
     return 2 + strBuff.length;
 };
 
+TAGString.prototype.setValue = function(value) {
+    if(typeof value !== "string") value = value.toString();
+    if(value.length > 65536) {
+        throw new Error("Value of TAG_String's length should greater than 65536.");
+    }
+    this.value = value;
+};
+
 var TAGList = function() {
     BaseTag.call(this);
     this.type = "TAG_List";
+    this.childType = "TAG_End";
 };
 
 util.inherits(TAGList, BaseTag);
@@ -202,6 +332,15 @@ TAGList.prototype._readBodyFromBuffer = function(buff, offset) {
     var Tag = module.exports[typeId];
     if((null === Tag || undefined === Tag) && 0 !== typeId) {
         throw new Error("Tag type " + typeId + " is not supported yet in list.");
+    }
+
+    if(0 !== typeId) {
+        for(var key in module.exports) {
+            if(!module.exports.hasOwnProperty(key)) continue;
+            if(module.exports[key] === typeId) {
+                this.childType = key;
+            }
+        }
     }
 
     this.value = [];
@@ -221,6 +360,117 @@ TAGList.prototype.calcBufferLength = function() {
     return this.value.reduce(function(sum, child) {
         return sum + child.calcBufferLength();
     }, 1 + 4);
+};
+
+TAGList.prototype.setValue = function(value) {
+    if(!util.isArray(value)) {
+        throw new Error("Value of TAG_List should be an array.");
+    }
+
+    if(value.length === 0) {
+        this.value = value;
+        return;
+    }
+
+    var typeName = this.childType;
+    var typeId = this.childType === "TAG_End" ? 0 : module.exports[typeName];
+    if(!typeId) {
+        typeName = value[0].type;
+        typeId = module.exports[typeName];
+        if(!typeId) {
+            throw new Error("Invalid TAG_List element.");
+        }
+    }
+
+    var TagType = module.exports[typeId];
+    var array = [];
+    for(var i = 0; i < value.length; i++) {
+        if(!(value[i] instanceof TagType)) {
+            throw new Error("Inconsistent TAG_List element type at position " + i + ".");
+        }
+
+        array.push(value[i]);
+    }
+
+    this.childType = typeName;
+    this.value = array;
+};
+
+TAGList.prototype.shift = function() {
+    return this.value.shift();
+};
+
+TAGList.prototype.unshift = function(value) {
+    var typeName = this.childType;
+    var typeId = this.childType === "TAG_End" ? 0 : module.exports[typeName];
+    if(!typeId) {
+        typeName = value.type;
+        typeId = module.exports[typeName];
+        if(!typeId) {
+            throw new Error("Invalid TAG_List element.");
+        }
+    }
+
+    var TagType = module.exports[typeId];
+    if(!(value instanceof TagType)) {
+        throw new Error("Element does not TAG_List's current type.");
+    }
+
+    this.childType = typeName;
+    return this.value.unshift(value);
+};
+
+TAGList.prototype.push = function(value) {
+    var typeName = this.childType;
+    var typeId = this.childType === "TAG_End" ? 0 : module.exports[typeName];
+    if(!typeId) {
+        typeName = value.type;
+        typeId = module.exports[typeName];
+        if(!typeId) {
+            throw new Error("Invalid TAG_List element.");
+        }
+    }
+
+    var TagType = module.exports[typeId];
+    if(!(value instanceof TagType)) {
+        throw new Error("Element does not TAG_List's current type.");
+    }
+
+    this.childType = typeName;
+    return this.value.push(value);
+};
+
+TAGList.prototype.pop = function() {
+    return this.value.pop();
+};
+
+TAGList.prototype.insert = function(value, pos) {
+    var typeName = this.childType;
+    var typeId = this.childType === "TAG_End" ? 0 : module.exports[typeName];
+    if(!typeId) {
+        typeName = value.type;
+        typeId = module.exports[typeName];
+        if(!typeId) {
+            throw new Error("Invalid TAG_List element.");
+        }
+    }
+
+    var TagType = module.exports[typeId];
+    if(!(value instanceof TagType)) {
+        throw new Error("Element does not TAG_List's current type.");
+    }
+
+    if(pos < 0) pos = 0;
+    if(pos > this.value.length) pos = this.value.length;
+    this.value.push([]);
+    for(var i = this.value.length - 1; i >= pos; i--) {
+        this.value[i + 1] = this.value[i];
+    }
+    this.value[pos] = value;
+};
+
+TAGList.prototype.clean = function() {
+    this.value = [];
 };
 
 TAGList.prototype.writeBuffer = function(buff, offset) {
@@ -325,6 +575,49 @@ TAGCompound.prototype.writeBuffer = function(buff, offset) {
     return len;
 };
 
+TAGCompound.prototype.setValue = function(value) {
+    if(typeof value !== "object") {
+        throw new Error("Invalid TAG_Compound value.");
+    }
+
+    var res = {};
+    for(var key in value) {
+        if(!value.hasOwnProperty(key)) continue;
+        var object = value[key];
+        if(!(object instanceof BaseTag)) {
+            throw new Error("Invalid TAG_Compound element in key \"" + key + "\".");
+        }
+
+        res[key] = value;
+    }
+
+    this.value = res;
+};
+
+TAGCompound.prototype.setByName = function(name, value, replace) {
+    if(this.value[name] !== undefined && !replace) {
+        throw new Error("Existing TAG_Compound value's name.");
+    }
+
+    if(typeof value !== "object") {
+        throw new Error("Invalid TAG_Compound value.");
+    }
+
+    if(!(value instanceof BaseTag)) {
+        throw new Error("Invalid TAG_Compound element.");
+    }
+
+    this.value[name] = value;
+};
+
+TAGCompound.prototype.deleteByName = function(name) {
+    delete this.value[name];
+};
+
+TAGCompound.prototype.clean = function() {
+    this.value = {};
+};
+
 var TAGIntArray = function() {
     BaseTag.call(this);
     this.type = "TAG_Int_Array";
@@ -348,6 +641,65 @@ TAGIntArray.prototype._readBodyFromBuffer = function(buff, offset) {
 TAGIntArray.prototype.calcBufferLength = function() {
     return 4 + this.value.length * 4;
 };
+
+TAGIntArray.prototype.setValue = function(array) {
+    if(!util.isArray(array)) {
+        throw new Error("Value of TAG_Int_Array should be an array.");
+    }
+
+    var newArray = [];
+    for(var i = 0; i < array.length; i++) {
+        newArray.push(parseInt(array[i]));
+        if(newArray[i] < -2147483648 || newArray[i] > 2147483647 || isNaN(newArray[i])) {
+            throw new Error("Each element in TAG_Int_Array should between " + 
+                            "-2147483648 and 2147483647.");
+        }
+    }
+
+    this.value = newArray;
+};
+
+TAGIntArray.prototype.shift = function() {
+    return this.value.shift();
+};
+
+TAGIntArray.prototype.unshift = function(value) {
+    value = parseInt(value);
+    if(value < -2147483648 || value > 2147483647 || isNaN(value)) {
+        throw new Error("Each element in TAG_Int_Array should between " +
+                        "-2147483648 and 2147483647.");
+    }
+    return this.value.unshift(value);
+};
+
+TAGIntArray.prototype.push = function(value) {
+    value = parseInt(value);
+    if(value < -2147483648 || value > 2147483647 || isNaN(value)) {
+        throw new Error("Each element in TAG_Int_Array should between " +
+                        "-2147483648 and 2147483647.");
+    }
+    return this.value.push(value);
+};
+
+TAGIntArray.prototype.pop = function() {
+    return this.value.pop();
+};
+
+TAGIntArray.prototype.insert = function(value, pos) {
+    value = parseInt(value);
+    if(value < -2147483648 || value > 2147483647 || isNaN(value)) {
+        throw new Error("Each element in TAG_Int_Array should between " +
+                        "-2147483648 and 2147483647.");
+    }
+    if(pos < 0) pos = 0;
+    if(pos > this.value.length) pos = this.value.length;
+    this.value.push([]);
+    for(var i = this.value.length - 1; i >= pos; i--) {
+        this.value[i + 1] = this.value[i];
+    }
+    this.value[pos] = value;
+};
+
 
 TAGIntArray.prototype.writeBuffer = function(buff, offset) {
     buff.writeUInt32BE(this.value.length, offset);
