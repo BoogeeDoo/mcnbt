@@ -56,3 +56,13 @@ Two methods for you to write NBT:
 > `method` is an optional parameter that indicates the zlib algorithm. The default
 > value is `"gzip"`.
 
+### Get Tag(s)
+
+After parsing your NBT, you can get the root tag(s).
+
++ `keys()`: get the root tag-key(s) into an array
++ `count()`: root tag(s) count
++ `select(tagname)`: this function will returns you a instance of tag which named `tagname`
+
+> The tag(s) are instance(s) of `BaseTag`. There're 10 subclasses of `BaseTag`.
+
