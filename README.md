@@ -66,3 +66,22 @@ After parsing your NBT, you can get the root tag(s).
 
 > The tag(s) are instance(s) of `BaseTag`. There're 10 subclasses of `BaseTag`.
 
+## Tag Class
+
+All the tag classes's parent class is `BaseTag`.
+
+`BaseTag` and all of the tags have functions below:
+
++ `getType()`: get this tag's type name. eg. `"TAG_Compound"`
++ `getId()`: alias of `getType`
++ `getTypeId()`: get this tag's type id. eg. `"TAG_Compound"`'s id is `10`
++ `getName()`: get this tag's name
++ `getValue()`: get this tag's content
++ `setValue(value)`: set this tag's value
++ `count()`: get this tag's children count (if any)
++ `selectAt(idx)`: get this tag's children at `idx` (if any)
++ `select(tagname)`: get this tag's children by `tagname` (if any)
++ `getAt(idx)`: alias of `selectAt`
++ `get(tagname)`: alias of `select`
++ `toJSON()`: convert this tag and all of its children into a JSON object
+
