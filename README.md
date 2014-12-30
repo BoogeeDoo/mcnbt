@@ -193,3 +193,7 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
 });
 ```
 
+## Contribute
+
+You're welcome to fork and pull requests!
+
