@@ -43,10 +43,14 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
 
             for(var i = 0; i < data.length; i++) {
                 if(data[i] !== buff[i]) {
-                    console.log("Not same at compressed " + i + ": " + buff[i] +
-                                " vs. " + data[i]);
+                    console.log("Not same at compressed " + i + ": " + buff[i] + " vs. " + data[i]);
                 }
             }
+
+            console.log("+---+---+---+---+---+---+---+---+---+---+\n" +
+                        "|ID1|ID2|CM |FLG|     MTIME     |XFL|OS | (more-->)\n" +
+                        "+---+---+---+---+---+---+---+---+---+---+");
+            console.log("9 in Compressed Buffer is OS code, ignore theirs difference.");
         });
     });
 
