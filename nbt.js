@@ -231,3 +231,4 @@ NBT.prototype.toJSON = function() {
 };
 
 module.exports = NBT;
+
