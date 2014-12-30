@@ -177,3 +177,19 @@ There're 5 extra methods:
 + `push(value)`
 + `insert(value, position)`
 
+## Example
+
+You may refer to `test/test.js`:
+
+```javascript
+var NBT = require("../nbt");
+var nbt = new NBT();
+nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
+    if(err) return console.error(err);
+    var gameRules = nbt.select("").select("Data").select("GameRules");
+    console.log(gameRules.getType());
+    console.log(gameRules.getTypeId());
+    console.log(gameRules.toString());
+});
+```
+
