@@ -42,6 +42,22 @@ NBT.prototype.loadFromBuffer = function(buff, callback) {
 };
 
 /**
+ * load from compressed buffer
+ * @param {Buffer} buff compressed buffer
+ * @param {Function} callback callback function
+ */
+NBT.prototype.loadFromZlibCompressedBuffer = function(buff, callback) {
+    var self = this;
+    zlib.unzip(buff, function(err, buff) {
+        if(err) {
+            return callback(err);
+        }
+
+        self.loadFromBuffer(buff, callback);
+    });
+};
+
+/**
  * write to compressed buffer
  * @param {Function} callback callback function
  * @param {String} [method] compress method (gzip|deflate)
@@ -158,13 +174,7 @@ NBT.prototype.loadFromZlibCompressedFile = function(filename, callback) {
             return callback(err);
         }
 
-        zlib.unzip(buff, function(err, buff) {
-            if(err) {
-                return callback(err);
-            }
-
-            self.loadFromBuffer(buff, callback);
-        });
+        self.loadFromZlibCompressedBuffer(buff, callback);
     });
 };
 
