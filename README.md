@@ -78,10 +78,102 @@ All the tag classes's parent class is `BaseTag`.
 + `getName()`: get this tag's name
 + `getValue()`: get this tag's content
 + `setValue(value)`: set this tag's value
-+ `count()`: get this tag's children count (if any)
-+ `selectAt(idx)`: get this tag's children at `idx` (if any)
++ `count()`: get this tag's children count / length (if any)
++ `selectAt(idx)`: get this tag's children / char at `idx` (if any)
 + `select(tagname)`: get this tag's children by `tagname` (if any)
 + `getAt(idx)`: alias of `selectAt`
 + `get(tagname)`: alias of `select`
 + `toJSON()`: convert this tag and all of its children into a JSON object
+
+### TAGByte
+
+The value's type is byte (number in js).
+
+No extra method.
+
+### TAGShort
+
+The value's type is short (number in js).
+
+No extra method.
+
+### TAGInt
+
+The value's type is integer (number in js).
+
+No extra method.
+
+### TAGLong
+
+The value's type is long long ([bignum](https://github.com/justmoon/node-bignum)
+in js).
+
+No extra method.
+
+### TAGFloat
+
+The value's type is float (number in js).
+
+No extra method.
+
+### TAGDouble
+
+The value's type is double (nbumer in js).
+
+No extra method.
+
+### TAGByteArray
+
+The value's type is array of byte (array of number in js).
+
+There're 5 extra methods:
+
++ `shift()`
++ `unshift(value)`
++ `pop()`
++ `push(value)`
++ `insert(value, position)`
+
+### TAGString
+
+The value's type is string.
+
+No extra method.
+
+### TAGList
+
+The value's type is array of any `Tag` instances (array of `Tag` instances in js).
+
+There're 6 extra methods:
+
++ `shift()`
++ `unshift(value)`
++ `pop()`
++ `push(value)`
++ `insert(value, position)`
++ `clean()`
+
+### TAGCompound
+
+The value's type is object contains any `Tag` instances.
+
+There're 4 extra methods:
+
++ `setByName(name, value, [replace])`: set `name` child into a certain `Tag` instance.
+  if `replace` equals to `false`, it won't replace an exsiting child. `replace` defaults to `false`
++ `getNames()`: get children's names
++ `deleteByName(name)`: delete a child tag by tag name
++ `clean()`: clean all children
+
+### TAGIntArray
+
+The value's type is array of integer (array of number in js).
+
+There're 5 extra methods:
+
++ `shift()`
++ `unshift(value)`
++ `pop()`
++ `push(value)`
++ `insert(value, position)`
 
