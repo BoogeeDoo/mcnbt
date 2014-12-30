@@ -610,6 +610,10 @@ TAGCompound.prototype.setByName = function(name, value, replace) {
     this.value[name] = value;
 };
 
+TAGCompound.prototype.getNames = function() {
+    return Object.keys(this.value);
+};
+
 TAGCompound.prototype.deleteByName = function(name) {
     delete this.value[name];
 };
