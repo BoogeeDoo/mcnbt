@@ -44,3 +44,15 @@ nbt.loadFromZlibCompressedFile("level.dat", function(err) {
 });
 ```
 
+### Write Back To NBT
+
+Two methods for you to write NBT:
+
++ `writeToCompressedBuffer(callback, [method])`
++ `writeToBuffer()`: returns the buffer (sync)
++ `writeToCompressedFile(filename, callback, [method])`
++ `writeToFile(filename, callback)`
+
+> `method` is an optional parameter that indicates the zlib algorithm. The default
+> value is `"gzip"`.
+
