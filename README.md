@@ -195,5 +195,7 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
 
 ## Contribute
 
-You're welcome to fork and pull requests!
+You're welcome to pull requests!
+
+「雖然我覺得不怎麼可能有人會關注我」
 
