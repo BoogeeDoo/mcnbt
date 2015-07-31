@@ -4,7 +4,7 @@
  * Copyright (c) 2014 XadillaX' Gensokyo, all rights
  * reserved
  */
-var Tag = require("./tags/base");
+var Tag = require("./lib/base_tag");
 var fs = require("fs");
 var zlib = require("zlib");
 

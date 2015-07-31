@@ -8,8 +8,8 @@ var NBT = require("../nbt");
 var fs = require("fs");
 
 var nbt = new NBT();
-nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
-    if(err) return console.error(err);
+nbt.loadFromZlibCompressedFile(__dirname + "/level.dat", function(err) {
+    if(err) return console.error(err, err.stack);
 
     console.log(nbt);
     console.log(nbt.toString());
@@ -35,8 +35,8 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
         }
     }
 
-    fs.readFile("./level.dat", function(err, data) {
-        if(err) return console.error(err);
+    fs.readFile(__dirname + "/level.dat", function(err, data) {
+        if(err) return console.error(err, err.stack);
         nbt.writeToCompressedBuffer(function(err, buff) {
             console.log("Compressed ReBuffer:", buff);
             console.log("Compressed OrBuffer:", data);
@@ -58,4 +58,3 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
         console.log("...", err);
     });
 });
-
