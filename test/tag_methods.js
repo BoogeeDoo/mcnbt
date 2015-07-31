@@ -4,8 +4,8 @@
  * Copyright (c) 2014 XadillaX' Gensokyo, all rights
  * reserved
  */
-var nbt = require("../tags/tags");
-var BaseTag = require("../tags/base");
+var nbt = require("../lib/tags");
+var BaseTag = require("../lib/base_tag");
 
 // Base
 console.log("BaseTag:");
@@ -27,4 +27,3 @@ for(var i = 1; i <= 11; i++) {
         }
     }
 }
-
