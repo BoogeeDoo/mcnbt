@@ -1,7 +1,7 @@
 /**
  * XadillaX created at 2014-12-25 16:18:24
  *
- * Copyright (c) 2014 XadillaX' Gensokyo, all rights
+ * Copyright (c) 2015 XadillaX' Gensokyo, all rights
  * reserved
  */
 var NBT = require("../nbt");
