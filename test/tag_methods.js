@@ -1,7 +1,7 @@
 /**
  * XadillaX created at 2014-12-30 16:17:32
  *
- * Copyright (c) 2014 XadillaX' Gensokyo, all rights
+ * Copyright (c) 2015 XadillaX' Gensokyo, all rights
  * reserved
  */
 var nbt = require("../lib/tags");
