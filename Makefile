@@ -15,7 +15,6 @@ test-coveralls: install
 	@$(ISTANBUL) cover $(MOCHA) \
 		--report lcovonly \
 		-- \
-		-t $(TIMEOUT) \
 		-R spec && cat ./coverage/lcov.info | \
 		\
 		$(COVERALLS) && rm -rf ./coverage 
