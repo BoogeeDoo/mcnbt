@@ -4,7 +4,7 @@
   "description": "Yet another Minecraft NBT format file / buffer parser for Node.js.",
   "main": "nbt.js",
   "scripts": {
-    "test": "node test/test.js"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
