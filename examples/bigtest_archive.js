@@ -14,7 +14,7 @@ nbt.loadFromZlibCompressedFile(__dirname + "/../test/files/bigtest.nbt", functio
     if(err) return console.error(err, err.stack);
 
     console.log(nbt);
-    console.log(nbt.toString());
+    console.log(JSON.stringify(nbt.toJSON()));
     console.log(nbt.select("Level"));
     console.log(nbt.select("Level").toString());
 
