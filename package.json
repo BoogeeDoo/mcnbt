@@ -1,8 +1,9 @@
 {
   "name": "mcnbt",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "Yet another Minecraft NBT format file / buffer parser for Node.js.",
   "main": "nbt.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "make test"
   },
