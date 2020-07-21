@@ -6,7 +6,7 @@
  */
 "use strict";
 
-var bignum = require("bignum");
+var Long = require("long");
 var fs = require("fs");
 var util = require("util");
 
@@ -63,7 +63,7 @@ describe("Real bugtest archive test", function() {
                 } else if(typeof result === "object" && !util.isArray(result)) {
                     node.getType().should.be.eql("TAG_Compound");
                 } else if(typeof result === "string") {
-                    if(bignum(result).toString() === result) {
+                    if(Long.fromString(result).toString() === result) {
                         node.getType().should.match(/^TAG_(String|Long)$/);
                     } else {
                         node.getType().should.be.eql("TAG_String");

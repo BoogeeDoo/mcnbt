@@ -6,7 +6,7 @@
  */
 "use strict";
 
-var bignum = require("bignum");
+var Long = require("long");
 var fs = require("fs");
 var util = require("util");
 
@@ -62,10 +62,12 @@ describe("Real archive test", function() {
                 if(typeof result === "object" && !util.isArray(result)) {
                     node.getType().should.be.eql("TAG_Compound");
                 } else if(typeof result === "string") {
-                    if(bignum(result).toString() === result) {
-                        node.getType().should.match(/^TAG_(String|Long)$/);
+                    if(result === "") {
+                        node.getType().should.match(/^TAG_String/);
+                    } else if(Long.fromString(result).toString() === result) {
+                        node.getType().should.match(/^TAG_(Long|String)$/);
                     } else {
-                        node.getType().should.be.eql("TAG_String");
+                        node.getType().should.match(/^TAG_String$/);
                     }
                 } else if(typeof result === "number" && result < 256) {
                     node.getType().should.match(/^TAG_(Int|Byte|Double)$/);
