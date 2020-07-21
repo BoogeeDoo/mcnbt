@@ -240,4 +240,6 @@ NBT.prototype.toJSON = function() {
     return res;
 };
 
+NBT.Tags = require('./lib/tags');
+
 module.exports = NBT;
