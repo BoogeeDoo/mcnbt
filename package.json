@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "make lint",
     "test": "make test",
-    "postinstall": "rm package-lock.json"
+    "postinstall": "rm -f package-lock.json"
   },
   "repository": {
     "type": "git",
