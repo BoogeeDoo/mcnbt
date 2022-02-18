@@ -15,12 +15,13 @@ lint: install
 test: install
 	@$(MOCHA)
 
-test-coveralls: install
+test-cov: install
 	@$(ISTANBUL) cover $(MOCHA) \
 		--report lcovonly \
 		-- \
-		-R spec && cat ./coverage/lcov.info | \
-		\
-		$(COVERALLS) && rm -rf ./coverage
+		-R spec
 
-.PHONY: test
+clean-cov:
+	@rm -rf ./coverage
+
+.PHONY: test clean clean-cov
