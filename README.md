@@ -1,5 +1,12 @@
 # MCNBT
 
+[![npm](https://img.shields.io/npm/v/mcnbt)](https://www.npmjs.com/package/mcnbt)
+[![Downloads](https://img.shields.io/npm/dm/mcnbt)](https://www.npmjs.com/package/mcnbt)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/BoogeeDoo/mcnbt/Node.js%20CI)](https://github.com/BoogeeDoo/mcnbt/actions/workflows/node.js.yml)
+[![Coveralls](https://img.shields.io/coveralls/github/BoogeeDoo/mcnbt)](https://coveralls.io/github/BoogeeDoo/mcnbt)
+[![License](https://img.shields.io/npm/l/mcnbt)](https://github.com/BoogeeDoo/mcnbt/blob/master/LICENSE)
+[![Dependencies](https://img.shields.io/librariesio/release/npm/mcnbt)](https://libraries.io/npm/mcnbt)
+
 Yet another Minecraft NBT format file / buffer parser for Node.js.
 
 ## Installation
