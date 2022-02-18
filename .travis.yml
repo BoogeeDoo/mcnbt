@@ -1,9 +1,10 @@
 language: node_js
 node_js:
-  - "4"
-  - "6"
   - "8"
   - "10"
+  - "12"
+  - "14"
+  - "16"
 
 install:
   - export CXX="g++-4.8" CXX="gcc-4.8"
