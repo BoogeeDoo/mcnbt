@@ -13,7 +13,7 @@ $ npm install --save mcnbt
 First require this package into your code:
 
 ```javascript
-var NBT = require("mcnbt");
+const NBT = require('mcnbt');
 ```
 
 ### Load & Parse NBT
@@ -30,7 +30,7 @@ All those functions's callback should be written like:
 
 ```javascript
 function(err) {
-    //... Your code here
+  //... Your code here
 }
 ```
 
@@ -38,9 +38,9 @@ For an example:
 
 ```javascript
 var nbt = new NBT();
-nbt.loadFromZlibCompressedFile("level.dat", function(err) {
-    if(err) return console.error(err);
-    console.log(nbt);
+nbt.loadFromZlibCompressedFile('level.dat', function(err) {
+  if(err) return console.error(err);
+  console.log(nbt);
 });
 ```
 
@@ -54,7 +54,7 @@ Two methods for you to write NBT:
 + `writeToFile(filename, callback)`
 
 > `method` is an optional parameter that indicates the zlib algorithm. The default
-> value is `"gzip"`.
+> value is `'gzip'`.
 
 ### Get Tag(s)
 
@@ -72,9 +72,9 @@ All the tag classes's parent class is `BaseTag`.
 
 `BaseTag` and all of the tags have functions below:
 
-+ `getType()`: get this tag's type name. eg. `"TAG_Compound"`
++ `getType()`: get this tag's type name. eg. `'TAG_Compound'`
 + `getId()`: alias of `getType`
-+ `getTypeId()`: get this tag's type id. eg. `"TAG_Compound"`'s id is `10`
++ `getTypeId()`: get this tag's type id. eg. `'TAG_Compound'`'s id is `10`
 + `getName()`: get this tag's name
 + `getValue()`: get this tag's content
 + `setValue(value)`: set this tag's value
@@ -182,14 +182,14 @@ There're 5 extra methods:
 You may refer to `test/test.js`:
 
 ```javascript
-var NBT = require("../nbt");
+var NBT = require('../nbt');
 var nbt = new NBT();
-nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
-    if(err) return console.error(err);
-    var gameRules = nbt.select("").select("Data").select("GameRules");
-    console.log(gameRules.getType());
-    console.log(gameRules.getTypeId());
-    console.log(gameRules.toString());
+nbt.loadFromZlibCompressedFile('./level.dat', function(err) {
+  if(err) return console.error(err);
+  var gameRules = nbt.select('').select('Data').select('GameRules');
+  console.log(gameRules.getType());
+  console.log(gameRules.getTypeId());
+  console.log(gameRules.toString());
 });
 ```
 
@@ -198,4 +198,3 @@ nbt.loadFromZlibCompressedFile("./level.dat", function(err) {
 You're welcome to pull requests!
 
 「雖然我覺得不怎麼可能有人會關注我」
-
