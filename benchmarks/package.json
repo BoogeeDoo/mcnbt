@@ -1,0 +1,17 @@
+{
+  "name": "benchmarks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "writeToBuffer.js",
+  "scripts": {
+    "bench-1": "node writeToBuffer.js",
+    "bench-2":"VERSION=2.0.2 node writeToBuffer.js",
+    "bench":"npm run bench-1 && npm run bench-2"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mcnbt": "2.0.1",
+    "benchmark": "^2.1.4"
+  }
+}

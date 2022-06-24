@@ -4,6 +4,7 @@ const fs = require('fs');
 const zlib = require('zlib');
 
 const Tag = require('./lib/base_tag');
+const { Bvffer } = require('./lib/bvffer');
 
 /**
  * The NBT class
@@ -72,25 +73,20 @@ class NBT {
    * @return {Buffer} The buffer
    */
   writeToBuffer() {
-    const buffLength = this.calcBufferLength();
-    const buff = new Buffer(buffLength);
-
-    let len = 0;
+    const buff = new Bvffer(this.calcBufferLength());
     for (const key in this.root) {
       if (!this.root.hasOwnProperty(key)) continue;
 
       const object = this.root[key];
-      buff.writeUInt8(object.getTypeId(), len);
+      buff.writeUInt8(object.getTypeId());
 
-      const nameBuff = new Buffer(object.id, 'utf8');
-      nameBuff.copy(buff, len + 1 + 2);
-      buff.writeUInt16BE(nameBuff.length, len + 1);
+      const nameBuff = Buffer.from(object.id, 'utf8');
+      buff.writeBuffer(nameBuff);
 
-      len += object.writeBuffer(buff, len + 1 + 2 + nameBuff.length);
-      len += (1 + 2 + nameBuff.length);
+      object.writeBuffer(buff);
     }
 
-    return buff;
+    return buff.buff;
   }
 
   /**
@@ -218,8 +214,7 @@ class NBT {
 
       // child type id for 1 byte, child name length for 2 bytes and child
       // name for (child name length) byte(s).
-      len += 1;
-      len += 2;
+      len += 3;
       len += Buffer.byteLength(this.root[key].id, 'utf8');
 
       // add the child body's length
@@ -241,7 +236,6 @@ class NBT {
     }
 
     return res;
-
   }
 }
 
